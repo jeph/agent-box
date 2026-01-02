@@ -1,5 +1,11 @@
 model = "gpt-5.2"
 model_reasoning_effort = "xhigh"
+approval_policy = "never"
+# In many Docker/container environments, Codex CLI's Linux Landlock sandbox can fail
+# (e.g. `Sandbox(LandlockRestrict)`) due to host kernel/seccomp restrictions. Using
+# `danger-full-access` here keeps Codex usable; the container runtime is the isolation
+# boundary for this environment.
+sandbox_mode = "danger-full-access"
 
 [features]
 web_search_request = true
