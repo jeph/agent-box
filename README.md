@@ -2,6 +2,25 @@
 
 Arch Linux + Homebrew + your dotfiles, packaged as a Docker image intended for running agents in an isolated environment.
 
+## Security / isolation model (read this)
+
+This image is primarily a **repeatable, throwaway dev environment** and a **host OS risk reducer**. It is **not** a complete “agent sandbox”.
+
+What it *does* try to isolate:
+- Your **host OS/tooling** from installs and filesystem churn (everything happens inside the container)
+- Accidental privilege escalation via the “hardened” run flags (drops Linux capabilities and enables `no-new-privileges`)
+
+What it does *not* protect you from:
+- **Data loss or exfiltration of anything you mount** into the container (especially `/workspace`)
+- **Network exfiltration** (unless you run with networking disabled)
+- Damage to persistent state in the **home volume** (`agent-box-home`), including `~/.codex/*` and other caches/credentials
+- **Host-level impact** if you mount powerful interfaces like `/var/run/docker.sock` or run with `--privileged`
+
+Practical guidance:
+- Treat anything mounted into `/workspace` as **fully trusted / disposable**.
+- Prefer the default “hardened” run. Use `agent-box-loose` only when you explicitly need it.
+- If you care about exfiltration, run with `--network none` (or a restricted network) and only enable networking when needed.
+
 ## Build
 
 ```sh
