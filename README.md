@@ -30,6 +30,38 @@ This uses:
 
 On first run, Docker copies the image’s `/home/agentbox` into the empty `agent-box-home` volume, so your dotfiles, `chezmoi` state, and `~/.codex/*` are present automatically.
 
+### Shell aliases (optional)
+
+Add these to your `~/.zshrc` or `~/.bashrc` so you can launch the container from any directory (mounting the current directory into `/workspace`):
+
+```sh
+alias agent-box='docker run --rm -it --init --platform linux/amd64 \
+  -v agent-box-home:/home/agentbox \
+  -v "$PWD":/workspace \
+  -e TERM="${TERM:-xterm-256color}" \
+  agent-box:latest'
+
+alias agent-box-hardened='docker run --rm -it --init --platform linux/amd64 \
+  -v agent-box-home:/home/agentbox \
+  -v "$PWD":/workspace \
+  -e TERM="${TERM:-xterm-256color}" \
+  --cap-drop=ALL \
+  --security-opt no-new-privileges \
+  --pids-limit 512 \
+  --memory 8g \
+  --cpus 4 \
+  agent-box:latest'
+```
+
+Usage examples:
+
+```sh
+agent-box
+agent-box zsh
+agent-box-hardened
+agent-box-hardened zsh
+```
+
 ## Hardened runtime (optional)
 
 ```sh
