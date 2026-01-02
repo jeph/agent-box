@@ -1,0 +1,14 @@
+services:
+  agent-box:
+    platform: linux/amd64
+    build:
+      context: .
+      secrets:
+        - codex_auth
+      args:
+        CODEX_AUTH_SOURCE: ${CODEX_AUTH_JSON:-${HOME}/.codex/auth.json}
+    image: agent-box:latest
+
+secrets:
+  codex_auth:
+    file: ${CODEX_AUTH_JSON:-${HOME}/.codex/auth.json}

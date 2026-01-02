@@ -1,0 +1,11 @@
+model = "gpt-5.2"
+model_reasoning_effort = "xhigh"
+
+[features]
+web_search_request = true
+
+[sandbox_workspace_write]
+network_access = true
+
+[notice.model_migrations]
+"gpt-5.2" = "gpt-5.2-codex"

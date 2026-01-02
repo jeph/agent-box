@@ -1,0 +1,30 @@
+brew "bash"
+brew "bat"
+brew "bottom"
+brew "chezmoi"
+brew "fastfetch"
+brew "fd"
+brew "ffmpeg"
+brew "fnm"
+brew "fzf"
+brew "git"
+brew "imagemagick" # yazi dependency
+brew "jq"
+brew "lsd"
+brew "micro"
+brew "neovim"
+brew "pnpm"
+brew "poppler" # yazi dependency
+brew "resvg" # yazi dependency
+brew "ripgrep"
+brew "rustup"
+brew "sevenzip" # yazi dependency
+brew "starship"
+brew "tlrc"
+brew "tmux"
+brew "yazi"
+brew "zellij"
+brew "zoxide"
+brew "zsh"
+
+cask "codex"
