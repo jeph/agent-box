@@ -154,10 +154,3 @@ This deletes the persistent home volume (dotfiles, caches, history, etc.):
 ```sh
 docker volume rm agent-box-home
 ```
-
-## References
-
-- Homebrew install docs: https://docs.brew.sh/Installation
-- Homebrew official site (install command): https://brew.sh/
-- Homebrew installer repository: https://github.com/Homebrew/install
-- Official Arch Linux Docker image: https://hub.docker.com/_/archlinux
