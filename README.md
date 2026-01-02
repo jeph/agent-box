@@ -2,7 +2,7 @@
 
 Arch Linux + Homebrew + your dotfiles, packaged as a Docker image intended for running agents in an isolated environment.
 
-## Security / isolation model (read this)
+## Security / Isolation Model
 
 This image is primarily a **repeatable, throwaway dev environment** and a **host OS risk reducer**. It is **not** a complete “agent sandbox”.
 
@@ -31,7 +31,7 @@ docker compose build
 Note: the official `archlinux` Docker image is `linux/amd64` only, so on Apple Silicon this will build/run under emulation (slower).
 Homebrew and dotfiles are installed/applied during the image build.
 
-## Run (default / hardened)
+## Run
 
 From the directory you want mounted into `/workspace`, run:
 
@@ -54,7 +54,7 @@ This uses:
 
 On first run, Docker copies the image’s `/home/agentbox` into the empty `agent-box-home` volume, so your dotfiles, `chezmoi` state, and `~/.codex/*` are present automatically.
 
-### Shell aliases (optional)
+### Shell Aliases (optional)
 
 Add these to your `~/.zshrc` or `~/.bashrc` so you can launch the container from any directory (mounting the current directory into `/workspace`):
 
@@ -86,7 +86,7 @@ agent-box-loose
 agent-box-loose zsh
 ```
 
-## Loose runtime (optional)
+## Loose Runtime
 
 If you need a “more powerful” environment (e.g., working `sudo` inside the container), run without the hardened flags:
 
@@ -102,9 +102,9 @@ Notes:
 - The default (hardened) run drops all Linux capabilities and enables `no-new-privileges`; setuid programs (like `sudo`) won’t work.
 - Adjust limits/flags to fit your machine.
 
-## Common tasks
+## Common Tasks
 
-### Codex auth
+### Codex Auth
 
 This image seeds Codex auth during build by copying your host `~/.codex/auth.json` into the image, and then into `agent-box-home` on first run.
 If `agent-box-home` already existed, rebuilding won’t update it — remove the volume and run again.
@@ -120,25 +120,7 @@ cd /path/to/agent-box
 CODEX_AUTH_JSON=/dev/null docker compose build
 ```
 
-Alternative: API key auth (no browser callback needed, no rebuild required):
-
-```sh
-printenv OPENAI_API_KEY | docker run --rm -i --platform linux/amd64 \
-  -v agent-box-home:/home/agentbox \
-  agent-box:latest codex login --with-api-key
-```
-
-### Refresh dotfiles
-
-```sh
-docker run --rm -it --init --platform linux/amd64 \
-  -v agent-box-home:/home/agentbox \
-  agent-box:latest chezmoi update
-```
-
-Tip: rebuilding the image won’t overwrite an existing home volume; to start fresh, remove `agent-box-home`.
-
-### Update container dependencies
+### Update Container Dependencies
 
 - Edit `Brewfile.linux`
 - Rebuild:
@@ -147,7 +129,9 @@ Tip: rebuilding the image won’t overwrite an existing home volume; to start fr
 (cd /path/to/agent-box && docker compose build --no-cache)
 ```
 
-### Reset to a clean home
+Tip: rebuilding the image won’t overwrite an existing home volume; to start fresh, remove `agent-box-home`
+
+### Reset Home Directory 
 
 This deletes the persistent home volume (dotfiles, caches, history, etc.):
 
