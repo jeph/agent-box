@@ -12,7 +12,7 @@ docker compose build
 Note: the official `archlinux` Docker image is `linux/amd64` only, so on Apple Silicon this will build/run under emulation (slower).
 Homebrew and dotfiles are installed/applied during the image build.
 
-## Run (interactive shell)
+## Run (default / hardened)
 
 From the directory you want mounted into `/workspace`, run:
 
@@ -21,6 +21,11 @@ docker run --rm -it --init --platform linux/amd64 \
   -v agent-box-home:/home/agentbox \
   -v "$PWD":/workspace \
   -e TERM="${TERM:-xterm-256color}" \
+  --cap-drop=ALL \
+  --security-opt no-new-privileges \
+  --pids-limit 512 \
+  --memory 8g \
+  --cpus 4 \
   agent-box:latest
 ```
 
@@ -39,17 +44,17 @@ alias agent-box='docker run --rm -it --init --platform linux/amd64 \
   -v agent-box-home:/home/agentbox \
   -v "$PWD":/workspace \
   -e TERM="${TERM:-xterm-256color}" \
-  agent-box:latest'
-
-alias agent-box-hardened='docker run --rm -it --init --platform linux/amd64 \
-  -v agent-box-home:/home/agentbox \
-  -v "$PWD":/workspace \
-  -e TERM="${TERM:-xterm-256color}" \
   --cap-drop=ALL \
   --security-opt no-new-privileges \
   --pids-limit 512 \
   --memory 8g \
   --cpus 4 \
+  agent-box:latest'
+
+alias agent-box-loose='docker run --rm -it --init --platform linux/amd64 \
+  -v agent-box-home:/home/agentbox \
+  -v "$PWD":/workspace \
+  -e TERM="${TERM:-xterm-256color}" \
   agent-box:latest'
 ```
 
@@ -58,27 +63,24 @@ Usage examples:
 ```sh
 agent-box
 agent-box zsh
-agent-box-hardened
-agent-box-hardened zsh
+agent-box-loose
+agent-box-loose zsh
 ```
 
-## Hardened runtime (optional)
+## Loose runtime (optional)
+
+If you need a “more powerful” environment (e.g., working `sudo` inside the container), run without the hardened flags:
 
 ```sh
 docker run --rm -it --init --platform linux/amd64 \
   -v agent-box-home:/home/agentbox \
   -v "$PWD":/workspace \
   -e TERM="${TERM:-xterm-256color}" \
-  --cap-drop=ALL \
-  --security-opt no-new-privileges \
-  --pids-limit 512 \
-  --memory 8g \
-  --cpus 4 \
   agent-box:latest
 ```
 
 Notes:
-- This drops all Linux capabilities and enables `no-new-privileges`; setuid programs (like `sudo`) won’t work.
+- The default (hardened) run drops all Linux capabilities and enables `no-new-privileges`; setuid programs (like `sudo`) won’t work.
 - Adjust limits/flags to fit your machine.
 
 ## Common tasks
