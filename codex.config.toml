@@ -13,5 +13,8 @@ web_search_request = true
 [sandbox_workspace_write]
 network_access = true
 
+[notice]
+hide_rate_limit_model_nudge = true
+
 [notice.model_migrations]
 "gpt-5.2" = "gpt-5.2-codex"

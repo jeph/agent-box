@@ -16,6 +16,7 @@ RUN pacman -Syu --noconfirm --needed \
     bash \
     file \
     git \
+    less \
     gnupg \
     openssh \
     procps-ng \
