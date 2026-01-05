@@ -16,6 +16,7 @@ RUN pacman -Syu --noconfirm --needed \
     bash \
     file \
     git \
+    ghostty-terminfo \
     less \
     gnupg \
     openssh \
