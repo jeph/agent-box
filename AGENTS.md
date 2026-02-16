@@ -7,6 +7,7 @@ You are running inside an **Arch Linux** container intended for agent work.
 - Search: `rg` (ripgrep), `fd`
 - JSON: `jq`
 - VCS: `git`
+- Python: `uv`
 - Node.js: `fnm` (Node version manager), `pnpm` (requires a Node version via `fnm`)
 - Rust: `rustup`
 - Dotfiles: `chezmoi`

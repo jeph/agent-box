@@ -18,6 +18,7 @@ brew "poppler" # yazi dependency
 brew "resvg" # yazi dependency
 brew "ripgrep"
 brew "rustup"
+brew "uv"
 brew "sevenzip" # yazi dependency
 brew "starship"
 brew "tlrc"
