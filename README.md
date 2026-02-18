@@ -52,7 +52,7 @@ This uses:
 - A persistent home volume at `/home/agentbox` (`agent-box-home`)
 - A bind mount of your current directory at `/workspace`
 
-On first run, Docker copies the image’s `/home/agentbox` into the empty `agent-box-home` volume, so your dotfiles, `chezmoi` state, and `~/.codex/*` are present automatically.
+On first run, Docker copies the image’s `/home/agentbox` into the empty `agent-box-home` volume, so your dotfiles, `chezmoi` state, and Codex config files are present automatically.
 
 ### Shell Aliases (optional)
 
@@ -106,19 +106,7 @@ Notes:
 
 ### Codex Auth
 
-This image seeds Codex auth during build by copying your host `~/.codex/auth.json` into the image, and then into `agent-box-home` on first run.
-If `agent-box-home` already existed, rebuilding won’t update it — remove the volume and run again.
-
-```sh
-docker volume rm agent-box-home
-```
-
-If you don’t want to bake host auth into the image, disable it for a build:
-
-```sh
-cd /path/to/agent-box
-CODEX_AUTH_JSON=/dev/null docker compose build
-```
+Credentials are not baked into the image. Authenticate from inside the running container, and the resulting auth state is stored in the persistent `agent-box-home` volume.
 
 ### Update Container Dependencies
 

@@ -22,6 +22,8 @@ RUN dnf -y upgrade --refresh \
     gnupg2 \
     less \
     make \
+    ncurses \
+    ncurses-term \
     openssh-clients \
     patch \
     procps-ng \
@@ -73,17 +75,6 @@ COPY --chown=agentbox:agentbox codex.config.toml /home/agentbox/.codex/config.to
 # Run as non-root by default.
 USER agentbox
 WORKDIR /workspace
-
-# --- Seed Codex auth from build secret (optional) ---
-# If the build secret `codex_auth` is provided (typically your host `~/.codex/auth.json`),
-# copy it into the image so Codex is already authenticated.
-ARG CODEX_AUTH_SOURCE=""
-RUN --mount=type=secret,id=codex_auth,required=false,uid=1000,gid=1000,mode=0400 \
-  echo "codex_auth_source=${CODEX_AUTH_SOURCE}" >/dev/null; \
-  rm -f /home/agentbox/.codex/auth.json; \
-  if [ -s /run/secrets/codex_auth ]; then \
-    install -m 0600 /run/secrets/codex_auth /home/agentbox/.codex/auth.json; \
-  fi
 
 ENTRYPOINT ["/usr/local/bin/agentbox-entrypoint"]
 CMD ["zsh"]
