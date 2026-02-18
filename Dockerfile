@@ -1,29 +1,40 @@
 # syntax=docker/dockerfile:1
 
 # Agent Box
-# - Arch Linux base image
+# - Fedora Linux base image (ARM64)
 # - Homebrew + Brewfile (Linux filtered) for userland tools
 # - Chezmoi dotfiles applied during image build (and copied into the home volume on first use)
 
-FROM archlinux:latest
+FROM --platform=linux/arm64 fedora:latest
 
-# --- Base OS dependencies (pacman) ---
+# --- Base OS dependencies (dnf) ---
 # Keep this minimal; Homebrew will provide most userland tools via Brewfile.linux.
-RUN pacman -Syu --noconfirm --needed \
-    base-devel \
+RUN dnf -y upgrade --refresh \
+  && dnf -y install --setopt=install_weak_deps=False \
+    bash \
     ca-certificates \
     curl \
-    bash \
     file \
+    findutils \
+    gcc \
     git \
-    ghostty-terminfo \
+    glibc-langpack-en \
+    gnupg2 \
     less \
-    gnupg \
-    openssh \
+    make \
+    openssh-clients \
+    patch \
     procps-ng \
+    shadow-utils \
     sudo \
+    tar \
     which \
-  && pacman -Scc --noconfirm
+  && dnf clean all
+
+# --- Runtime entrypoint ---
+# Guard against unsupported host TERM values forwarded into the container.
+COPY docker-entrypoint.sh /usr/local/bin/agentbox-entrypoint
+RUN chmod 0755 /usr/local/bin/agentbox-entrypoint
 
 # --- Non-root user for agent work ---
 RUN groupadd -g 1000 agentbox \
@@ -37,6 +48,7 @@ RUN groupadd -g 1000 agentbox \
 # Homebrew lives in /home/linuxbrew so it can be shared across projects.
 ENV HOMEBREW_NO_ANALYTICS=1 \
   HOMEBREW_NO_AUTO_UPDATE=1 \
+  HOMEBREW_BUNDLE_NO_LOCK=1 \
   PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH
 
 USER agentbox
@@ -73,4 +85,5 @@ RUN --mount=type=secret,id=codex_auth,required=false,uid=1000,gid=1000,mode=0400
     install -m 0600 /run/secrets/codex_auth /home/agentbox/.codex/auth.json; \
   fi
 
+ENTRYPOINT ["/usr/local/bin/agentbox-entrypoint"]
 CMD ["zsh"]

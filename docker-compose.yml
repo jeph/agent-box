@@ -1,6 +1,6 @@
 services:
   agent-box:
-    platform: linux/amd64
+    platform: linux/arm64
     build:
       context: .
       secrets:

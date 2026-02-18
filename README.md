@@ -1,6 +1,6 @@
 # Agent Box
 
-Arch Linux + Homebrew + your dotfiles, packaged as a Docker image intended for running agents in an isolated environment.
+Fedora Linux (ARM64) + Homebrew + your dotfiles, packaged as a Docker image intended for running agents in an isolated environment.
 
 ## Security / Isolation Model
 
@@ -28,7 +28,7 @@ cd /path/to/agent-box
 docker compose build
 ```
 
-Note: the official `archlinux` Docker image is `linux/amd64` only, so on Apple Silicon this will build/run under emulation (slower).
+This project targets `linux/arm64` so Apple Silicon can build and run natively (no Rosetta requirement).
 Homebrew and dotfiles are installed/applied during the image build.
 
 ## Run
@@ -36,7 +36,7 @@ Homebrew and dotfiles are installed/applied during the image build.
 From the directory you want mounted into `/workspace`, run:
 
 ```sh
-docker run --rm -it --init --platform linux/amd64 \
+docker run --rm -it --init --platform linux/arm64 \
   -v agent-box-home:/home/agentbox \
   -v "$PWD":/workspace \
   -e TERM="${TERM:-xterm-256color}" \
@@ -59,7 +59,7 @@ On first run, Docker copies the image’s `/home/agentbox` into the empty `agent
 Add these to your `~/.zshrc` or `~/.bashrc` so you can launch the container from any directory (mounting the current directory into `/workspace`):
 
 ```sh
-alias agent-box='docker run --rm -it --init --platform linux/amd64 \
+alias agent-box='docker run --rm -it --init --platform linux/arm64 \
   -v agent-box-home:/home/agentbox \
   -v "$PWD":/workspace \
   -e TERM="${TERM:-xterm-256color}" \
@@ -70,7 +70,7 @@ alias agent-box='docker run --rm -it --init --platform linux/amd64 \
   --cpus 4 \
   agent-box:latest'
 
-alias agent-box-loose='docker run --rm -it --init --platform linux/amd64 \
+alias agent-box-loose='docker run --rm -it --init --platform linux/arm64 \
   -v agent-box-home:/home/agentbox \
   -v "$PWD":/workspace \
   -e TERM="${TERM:-xterm-256color}" \
@@ -91,7 +91,7 @@ agent-box-loose zsh
 If you need a “more powerful” environment (e.g., working `sudo` inside the container), run without the hardened flags:
 
 ```sh
-docker run --rm -it --init --platform linux/amd64 \
+docker run --rm -it --init --platform linux/arm64 \
   -v agent-box-home:/home/agentbox \
   -v "$PWD":/workspace \
   -e TERM="${TERM:-xterm-256color}" \
