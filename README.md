@@ -39,6 +39,11 @@ From the directory you want mounted into `/workspace`, run:
 docker run --rm -it --init --platform linux/arm64 \
   -v agent-box-home:/home/agentbox \
   -v "$PWD":/workspace \
+  --mount type=bind,src=/run/host-services/ssh-auth.sock,target=/run/host-services/ssh-auth.sock \
+  --group-add "$(docker run --rm --platform linux/arm64 \
+    --mount type=bind,src=/run/host-services/ssh-auth.sock,target=/ssh-auth.sock \
+    agent-box:latest stat -c %g /ssh-auth.sock)" \
+  -e SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock \
   -e TERM="${TERM:-xterm-256color}" \
   --cap-drop=ALL \
   --security-opt no-new-privileges \
@@ -62,6 +67,11 @@ Add these to your `~/.zshrc` or `~/.bashrc` so you can launch the container from
 alias agent-box='docker run --rm -it --init --platform linux/arm64 \
   -v agent-box-home:/home/agentbox \
   -v "$PWD":/workspace \
+  --mount type=bind,src=/run/host-services/ssh-auth.sock,target=/run/host-services/ssh-auth.sock \
+  --group-add "$(docker run --rm --platform linux/arm64 \
+    --mount type=bind,src=/run/host-services/ssh-auth.sock,target=/ssh-auth.sock \
+    agent-box:latest stat -c %g /ssh-auth.sock)" \
+  -e SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock \
   -e TERM="${TERM:-xterm-256color}" \
   --cap-drop=ALL \
   --security-opt no-new-privileges \
@@ -73,6 +83,11 @@ alias agent-box='docker run --rm -it --init --platform linux/arm64 \
 alias agent-box-loose='docker run --rm -it --init --platform linux/arm64 \
   -v agent-box-home:/home/agentbox \
   -v "$PWD":/workspace \
+  --mount type=bind,src=/run/host-services/ssh-auth.sock,target=/run/host-services/ssh-auth.sock \
+  --group-add "$(docker run --rm --platform linux/arm64 \
+    --mount type=bind,src=/run/host-services/ssh-auth.sock,target=/ssh-auth.sock \
+    agent-box:latest stat -c %g /ssh-auth.sock)" \
+  -e SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock \
   -e TERM="${TERM:-xterm-256color}" \
   agent-box:latest'
 ```
@@ -94,6 +109,11 @@ If you need a “more powerful” environment (e.g., working `sudo` inside the c
 docker run --rm -it --init --platform linux/arm64 \
   -v agent-box-home:/home/agentbox \
   -v "$PWD":/workspace \
+  --mount type=bind,src=/run/host-services/ssh-auth.sock,target=/run/host-services/ssh-auth.sock \
+  --group-add "$(docker run --rm --platform linux/arm64 \
+    --mount type=bind,src=/run/host-services/ssh-auth.sock,target=/ssh-auth.sock \
+    agent-box:latest stat -c %g /ssh-auth.sock)" \
+  -e SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock \
   -e TERM="${TERM:-xterm-256color}" \
   agent-box:latest
 ```
