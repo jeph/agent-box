@@ -8,6 +8,7 @@ brew "ffmpeg"
 brew "fnm"
 brew "fzf"
 brew "git"
+brew "gh"
 brew "imagemagick" # yazi dependency
 brew "jq"
 brew "lsd"
